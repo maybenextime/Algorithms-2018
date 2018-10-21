@@ -33,12 +33,14 @@ public class JavaAlgorithms {
      * Например, для приведённого выше файла результат должен быть Pair(3, 4)
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
+     * Трудоемкость алгоритма - O(N)
+     * * Ресурсоемкость - O(N)
      */
     static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws IOException {
         BufferedReader fileIn = new BufferedReader(new FileReader(inputName));
         Pair<Integer, Integer> pair = null;
         List<Integer> list = new ArrayList<>();
-        String str = "";
+        String str;
         int max = 0;
         int diff1 = 0;
         int diff2 = 0;
@@ -64,7 +66,6 @@ public class JavaAlgorithms {
                         nextIndx = j;
                         if (diff2 < diff1) isIncre = false;
                     }
-                    ;
                 }
             }
             i = nextIndx - 1;
@@ -133,6 +134,8 @@ public class JavaAlgorithms {
      * При сравнении подстрок, регистр символов *имеет* значение.
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
+     * Трудоемкость алгоритма - O(N*m)
+     * * Ресурсоемкость - O(N*m)
      */
     static public String longestCommonSubstring(String firs, String second) {
         int lenghtFirst = firs.length();
@@ -174,6 +177,8 @@ public class JavaAlgorithms {
      * <p>
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
+     * Трудоемкость алгоритма - O(NlogN)
+     * * Ресурсоемкость - O(N)
      */
     static public int calcPrimesNumber(int limit) {
         int res = 0;

@@ -2,7 +2,9 @@ package lesson1;
 
 import java.io.*;
 import java.util.*;
+
 import kotlin.NotImplementedError;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -32,8 +34,13 @@ public class JavaTasks {
      * 19:56:14
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
+     * <p>
+     * Трудоемкость алгоритма - O(NlogN)
+     * Ресурсоемкость - O(N)
      */
-    public static Integer toSec(String str) {
+
+
+    private static Integer toSec(String str) {
         String[] sub = str.split(":");
         return (Integer.parseInt(sub[0]) * 3600 + Integer.parseInt(sub[1]) * 60 + Integer.parseInt(sub[2]));
     }
@@ -43,13 +50,12 @@ public class JavaTasks {
         BufferedWriter fileOut = new BufferedWriter(new FileWriter(outputName));
         String line;
         List<Integer> listSec = new ArrayList<>();
-        Map<Integer, String> mapTime = new HashMap<Integer, String>();
+        Map<Integer, String> mapTime = new HashMap<>();
         while ((line = fileIn.readLine()) != null) {
             if (!line.matches("^([0-9][0-9]:[0-9][0-9]:[0-9][0-9]$)")) throw new IOException();
             mapTime.put(toSec(line), line);
             listSec.add(toSec(line));
         }
-        ;
         int[] nSec = listSec.stream().mapToInt(i -> i).toArray();
         Sorts.quickSort(nSec);
         for (int e : nSec) {
@@ -84,6 +90,9 @@ public class JavaTasks {
      * Садовая 5 - Сидоров Петр, Сидорова Мария
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
+     * <p>
+     * Трудоемкость алгоритма - O(NlogN)
+     * Ресурсоемкость - O(N)
      */
     static public void sortAddresses(String inputName, String outputName) throws IOException {
         BufferedReader fileIn = new BufferedReader(new FileReader(inputName));
@@ -141,7 +150,11 @@ public class JavaTasks {
      * 24.7
      * 99.5
      * 121.3
+     * <p>
+     * Трудоемкость алгоритма - O(N+k)
+     * Ресурсоемкость - O(N)
      */
+
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         BufferedReader fileIn = new BufferedReader(new FileReader(inputName));
         BufferedWriter fileOut = new BufferedWriter(new FileWriter(outputName));
@@ -153,7 +166,7 @@ public class JavaTasks {
         }
         int[] indexTemp = new int[7731];
         for (int i = 0; i < list.size(); i++) {
-            indexTemp[list.get(i)] += 1;
+            indexTemp[list.get(i)]++;
         }
         for (int i = 0; i < 7730; i++) {
             indexTemp[i + 1] += indexTemp[i];
@@ -170,10 +183,7 @@ public class JavaTasks {
             fileOut.write(String.valueOf(b) + "\n");
         }
         fileOut.close();
-
     }
-
-
 
 
     /**
