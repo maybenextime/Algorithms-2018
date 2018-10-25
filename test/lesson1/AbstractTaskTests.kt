@@ -18,6 +18,7 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                      13:15:19
                      13:15:19
                      19:56:14
+
                 """.trimIndent()
             )
         } finally {
@@ -39,19 +40,34 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+
+        try {
+            sortTimes("input/time_in4.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/time_out4.txt").readLines().joinToString(separator = "\n"))
+        } finally {
+            File("temp.txt").delete()
+        }
+
     }
 
     protected fun sortAddresses(sortAddresses: (String, String) -> Unit) {
         // TODO: large test
+        /*    try {
+                sortAddresses("input/addr_in1.txt", "temp.txt")
+                assertFileContent("temp.txt",
+                        """
+                        Железнодорожная 3 - Петров Иван
+                        Железнодорожная 7 - Иванов Алексей, Иванов Михаил
+                        Садовая 5 - Сидоров Петр, Сидорова Мария
+                    """.trimIndent()
+                )
+            } finally {
+                File("temp.txt").delete()
+            }
+            */
         try {
-            sortAddresses("input/addr_in1.txt", "temp.txt")
-            assertFileContent("temp.txt",
-                    """
-                    Железнодорожная 3 - Петров Иван
-                    Железнодорожная 7 - Иванов Алексей, Иванов Михаил
-                    Садовая 5 - Сидоров Петр, Сидорова Мария
-                """.trimIndent()
-            )
+            sortAddresses("input/addr_in2.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/addr_out2.txt").readLines().joinToString(separator = "\n"))
         } finally {
             File("temp.txt").delete()
         }
@@ -95,6 +111,12 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                     121.3
                 """.trimIndent()
             )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTemperatures("input/temp_in2.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/temp_out2.txt").readLines().joinToString(separator = "\n"))
         } finally {
             File("temp.txt").delete()
         }

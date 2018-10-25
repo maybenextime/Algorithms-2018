@@ -144,8 +144,8 @@ public class JavaAlgorithms {
         int indexRow = 0;
         String longestSubString = "";
         int[][] count = new int[lenghtFirst][lenghtSecd];
-        for (int i = 0; i < lenghtFirst - 1; i++) {
-            for (int j = 0; j < lenghtSecd - 1; j++) {
+        for (int i = 0; i < lenghtFirst ; i++) {
+            for (int j = 0; j < lenghtSecd ; j++) {
                 if (firs.charAt(i) == second.charAt(j)) {
                     if (i == 0 || j == 0) {
                         count[i][j] = 1;

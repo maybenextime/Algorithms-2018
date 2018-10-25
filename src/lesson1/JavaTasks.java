@@ -98,27 +98,30 @@ public class JavaTasks {
         BufferedReader fileIn = new BufferedReader(new FileReader(inputName));
         BufferedWriter fileOut = new BufferedWriter(new FileWriter(outputName));
         String line;
-        Map<String, List<String>> mapAdrs = new TreeMap<>();
+        Map<String, TreeSet<String>> mapAdrs = new TreeMap<>();
         while ((line = fileIn.readLine()) != null) {
             String[] sub = line.split(" - ");
             String name = sub[0];
             String adr = sub[1];
             if (!mapAdrs.containsKey(adr)) {
-                List<String> listName = new ArrayList<>();
-                listName.add(name);
-                mapAdrs.put(adr, listName);
+                TreeSet<String> setName = new TreeSet<>();
+                setName.add(name);
+                mapAdrs.put(adr, setName);
             } else {
                 mapAdrs.get(adr).add(name);
-                Collections.sort(mapAdrs.get(adr));
             }
         }
         for (String key : mapAdrs.keySet()) {
-            String nameList = mapAdrs.get(key).get(0);
-            for (int i = 1; i < mapAdrs.get(key).size(); i++) nameList = nameList + ", " + mapAdrs.get(key).get(i);
-            fileOut.write(key + " - " + nameList + "\n");
-
+            TreeSet<String> nameSet = mapAdrs.get(key);
+            String[] nameList = mapAdrs.get(key).toArray(new String[mapAdrs.get(key).size()]);
+            String name = nameList[0];
+            if (nameList.length > 1) {
+                for (int i = 1; i < nameList.length; i++) name = name + ", " + nameList[i];
+            }
+            fileOut.write("\n" + key + " - " + name);
         }
         fileOut.close();
+
     }
 
     /**
@@ -216,6 +219,7 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) {
+        throw new NotImplementedError();
     }
 
     /**
@@ -233,5 +237,6 @@ public class JavaTasks {
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
+        throw new NotImplementedError();
     }
 }
