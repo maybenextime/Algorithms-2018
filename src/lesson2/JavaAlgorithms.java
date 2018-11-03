@@ -4,9 +4,7 @@ import kotlin.NotImplementedError;
 import kotlin.Pair;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -144,8 +142,8 @@ public class JavaAlgorithms {
         int indexRow = 0;
         String longestSubString = "";
         int[][] count = new int[lenghtFirst][lenghtSecd];
-        for (int i = 0; i < lenghtFirst ; i++) {
-            for (int j = 0; j < lenghtSecd ; j++) {
+        for (int i = 0; i < lenghtFirst; i++) {
+            for (int j = 0; j < lenghtSecd; j++) {
                 if (firs.charAt(i) == second.charAt(j)) {
                     if (i == 0 || j == 0) {
                         count[i][j] = 1;
@@ -180,6 +178,7 @@ public class JavaAlgorithms {
      * Трудоемкость алгоритма - O(NlogN)
      * * Ресурсоемкость - O(N)
      */
+
     static public int calcPrimesNumber(int limit) {
         int res = 0;
         boolean[] isPrime = new boolean[limit + 1];
@@ -224,8 +223,66 @@ public class JavaAlgorithms {
      * Все слова и буквы -- русские или английские, прописные.
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
+     * Трудоемкость алгоритма - O(m*n+k*h) k количество words , h средная длина word
+     * Ресурсоемкость - O(m*n) где m,n размер матрицы
      */
-    static public Set<String> baldaSearcher(String inputName, Set<String> words) {
-        throw new NotImplementedError();
+    static public Set<String> baldaSearcher(String inputName, Set<String> words) throws IOException {
+        Set<String> result = new HashSet<>();
+        int row = 0;
+        int col = 0;
+        String str;
+        List<String[]> linesStr = new ArrayList<>();
+        BufferedReader fileIn = new BufferedReader(new FileReader(inputName));
+        while ((str = fileIn.readLine()) != null) {
+            String[] string = str.split(" ");
+            linesStr.add(string);
+            row++;
+        }
+        col = linesStr.get(0).length;
+        Map<String, List<Pair<Integer, Integer>>> letter = new HashMap<>();
+
+        String[][] matrix = new String[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                matrix[i][j] = linesStr.get(i)[j];
+                if (!letter.containsKey(matrix[i][j])) {
+                    List<Pair<Integer, Integer>> listIndex = new ArrayList<>();
+                    listIndex.add(new Pair<>(i, j));
+                    letter.put(matrix[i][j], listIndex);
+                } else {
+                    letter.get(matrix[i][j]).add(new Pair<>(i, j));
+                }
+            }
+        }
+        for (String word : words) {
+            String firstLetter = String.valueOf(word.charAt(0));
+            if (letter.containsKey(firstLetter)) {
+                for (Pair<Integer, Integer> pairIndex : letter.get(firstLetter)) {
+                    if (check(matrix, pairIndex.getFirst(), pairIndex.getSecond(), word.substring(1))) {
+                        result.add(word);
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    static private boolean check(String[][] matrix, int row, int col, String word) {
+        if (word.length() == 0) return true;
+        if (row > 0 && matrix[row - 1][col].equals(word.valueOf(word.charAt(0)))) {
+            if (check(matrix, row - 1, col, word.substring(1))) return true;
+        }
+        if (col > 0 && matrix[row][col - 1].equals(word.valueOf(word.charAt(0)))) {
+            if (check(matrix, row, col - 1, word.substring(1))) return true;
+        }
+        if (row < matrix.length - 1 && matrix[row + 1][col].equals(word.valueOf(word.charAt(0)))) {
+            if (check(matrix, row + 1, col, word.substring(1))) return true;
+        }
+        if (col < matrix[0].length - 1 && matrix[row][col + 1].equals(word.valueOf(word.charAt(0)))) {
+            if (check(matrix, row, col + 1, word.substring(1))) return true;
+        }
+        return false;
+
     }
 }
