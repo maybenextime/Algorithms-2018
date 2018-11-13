@@ -62,6 +62,7 @@ class BinaryTreeTest {
                 treeSet += element
                 binarySet += element
             }
+
             val toRemove = list[random.nextInt(list.size)]
             treeSet.remove(toRemove)
             binarySet.remove(toRemove)

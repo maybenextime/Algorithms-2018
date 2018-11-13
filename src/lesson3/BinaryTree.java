@@ -36,12 +36,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         Node<T> newNode = new Node<>(t);
         if (closest == null) {
             root = newNode;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             assert closest.left == null;
             closest.left = newNode;
-        }
-        else {
+        } else {
             assert closest.right == null;
             closest.right = newNode;
         }
@@ -66,9 +64,81 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (!contains(o)) return false;
+        else
+            return remove(root, o);
     }
+
+    public boolean remove(Node<T> node, Object o) {
+        T t = (T) o;
+        Node<T> closet = find(t);
+        T minValue;
+        if (closet.right != null) minValue = minValue(closet.right);
+        else minValue = null;
+        if (minValue == null) {
+            if (closet == root) root = root.left;
+            else {
+                Node<T> parentOfRemoveNode = findParent(node, t);
+                changeNode(parentOfRemoveNode, closet, closet.left);
+            }
+        } else {
+            Node<T> parentOfNodeMin = findParent(node, minValue);
+            Node<T> newNode = find(minValue);
+            Node<T> parentOfRemoveNode = findParent(node, t);
+
+            if (closet.left == null && closet.right == null) {
+                changeNode(parentOfRemoveNode, closet, null);
+                return true;
+            }
+
+            if (closet.right == newNode) {
+                parentOfNodeMin.right = newNode.right;
+            } else parentOfNodeMin.left = newNode.right;
+
+            newNode.left = closet.left;
+            newNode.right = closet.right;
+
+            if (closet == root) {
+                root = newNode;
+            } else {
+                changeNode(parentOfRemoveNode, closet, newNode);
+            }
+        }
+        size--;
+        return true;
+
+    }
+
+    private void changeNode(Node<T> parN, Node<T> cloN, Node<T> newN) {
+        if (parN.value.compareTo(cloN.value) > 0) parN.left = newN;
+        else parN.right = newN;
+    }
+
+    public T minValue(Node<T> node) {
+        if (node.left == null) return node.value;
+        else return (minValue(node.left));
+    }
+
+    public Node<T> findParent(Node<T> node, T value1) {
+        if (root.value == value1) return null;
+        Node<T> left = node.left;
+        Node<T> right = node.right;
+        int comparison = value1.compareTo(node.value);
+        if (left == null && right != null) {
+            if (right.value == value1) return node;
+        }
+        if (right == null && left != null)
+            if (left.value == value1) return node;
+
+        if (left != null && right != null)
+            if (left.value == value1 || right.value == value1) {
+                return node;
+            }
+        if (comparison < 0) return findParent(node.left, value1);
+        else return findParent(node.right, value1);
+
+    }
+
 
     @Override
     public boolean contains(Object o) {
@@ -87,12 +157,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         int comparison = value.compareTo(start.value);
         if (comparison == 0) {
             return start;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             if (start.left == null) return start;
             return find(start.left, value);
-        }
-        else {
+        } else {
             if (start.right == null) return start;
             return find(start.right, value);
         }
@@ -102,15 +170,32 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
-        private BinaryTreeIterator() {}
+        private BinaryTreeIterator() {
+        }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
+        private Node<T> bigParent(Node<T> node) {
+            if (node == root) return null;
+            Node<T> pNode = findParent(root, node.value);
+            if (pNode.right == node) return bigParent(pNode);
+            else return pNode;
+        }
+
         private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+            if (current == null) {
+                return find(minValue(root));
+            }
+            if (current == root) {
+                if (current.right == null) return null;
+                else return find(minValue(root.right));
+            } else {
+                if (current.right == null) return bigParent(current);
+                else return find(minValue(current.right));
+            }
+
         }
 
         @Override
@@ -118,8 +203,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return findNext() != null;
         }
 
+        private Node<T> pre = null;
+
         @Override
         public T next() {
+            pre = current;
             current = findNext();
             if (current == null) throw new NoSuchElementException();
             return current.value;
@@ -131,9 +219,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            if (current == null) return;
+            BinaryTree.this.remove(current.value);
+            current = pre;
         }
+
     }
 
     @NotNull
@@ -161,8 +251,15 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        SortedSet<T> result = new TreeSet<>();
+        Iterator iterator = BinaryTree.this.iterator();
+        T element;
+        while (iterator.hasNext()) {
+            element = (T) iterator.next();
+            if (element.compareTo(fromElement) >= 0) result.add(element);
+            if (element.compareTo(toElement) < 0) break;
+        }
+        return result;
     }
 
     /**
@@ -207,3 +304,4 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return current.value;
     }
 }
+
