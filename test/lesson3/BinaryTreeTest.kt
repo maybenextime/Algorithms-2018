@@ -76,6 +76,11 @@ class BinaryTreeTest {
             }
             assertTrue(binarySet.checkInvariant())
         }
+        val binaryTree = create()
+        binaryTree += 0
+        binaryTree.remove(0)
+        assertTrue(binaryTree.size == 0)
+
     }
 
     @Test
@@ -109,6 +114,15 @@ class BinaryTreeTest {
             while (treeIt.hasNext()) {
                 assertEquals(treeIt.next(), binaryIt.next())
             }
+        }
+        val treeSet = TreeSet<Int>()
+        val binarySet = create()
+        treeSet += 0
+        binarySet += 0
+        val treeIt = treeSet.iterator()
+        val binaryIt = binarySet.iterator()
+        while (treeIt.hasNext()) {
+            assertEquals(treeIt.next(), binaryIt.next())
         }
     }
 
@@ -157,7 +171,12 @@ class BinaryTreeTest {
                         "$element should be ${if (inn) "in" else "not in"} tree")
             }
             assertTrue(binarySet.checkInvariant())
+
         }
+        val binaryTree = create()
+        binaryTree += 0
+        binaryTree.remove(0)
+        assertTrue(binaryTree.size == 0)
     }
 
     @Test
